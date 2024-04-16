@@ -1,18 +1,15 @@
 
 const { connectToRabbitMQ, createChannel } = require('./lib/rmq');
 
-// Ваш код для створення та роботи з сервісами (AuthService, UserService, PaymentService)
-
 async function main() {
     try {
-        // Ваш код для створення та роботи з сервісами
 
         // Підключення до RabbitMQ
         const conn = await connectToRabbitMQ();
         const ch = await createChannel(conn);
 
         // Отримання результатів вашого додатку
-        const result = 'AuthService created\nUserService created\nPaymentService created\nUser added: id{"id":"25","name":"Янош","idTour":"49"}\nUser added: id{"id":"4","name":"Рома","idTour":"200"}\nUser added: id{"id":"0","name":"Agent","idTour":"34"}\nTour ready: 34\nTour ready: 49\nTour ready: 200\n';
+        const result = 'AuthService created\nUserService created\nPaymentService created\nUser added: id{"id":"42","name":"Foxi","idTour":"221"}\nUser added: id{"id":"43","name":"Polina","idTour":"6"}\nUser added: id{"id":"88","name":"Agent","idTour":"992"}\nTour ready: 221\nTour ready: 6\nTour ready: 992\n';
 
         // Надсилання результату до RabbitMQ
         await ch.assertQueue('results_queue', { durable: true });
