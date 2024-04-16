@@ -49,9 +49,9 @@ const paymentController = new PaymentController();
 
 // Додавання користувачів
 const users = [
-    { id: '14', name: 'Янош', idTour: '88' },
-    { id: '52', name: 'Рома', idTour: '52'},
-    { id: '22', name: 'Илья', idTour: '68'}
+    { id: '14', name: 'Yan', idTour: '88' },
+    { id: '52', name: 'Roma', idTour: '52'},
+    { id: '22', name: 'New Man', idTour: '68'}
 ];
 userService.addUsers(users);
 
