@@ -1,17 +1,38 @@
 
+const { connectToRabbitMQ, createChannel } = require('./lib/rmq');
+
+// Ваш код для створення та роботи з сервісами (AuthService, UserService, PaymentService)
+
 async function main() {
-    const ch = await createChannel(conn);
+    try {
+        // Ваш код для створення та роботи з сервісами
 
-    // Додавання користувачів та оплачених турів
-    const users = [1, 2, 3];
-    const tours = [1, 2];
+        // Підключення до RabbitMQ
+        const conn = await connectToRabbitMQ();
+        const ch = await createChannel(conn);
 
-    for (const user of users) {
-        ch.sendToQueue('user_queue', Buffer.from(user.toString()));
-    }
+        // Отримання результатів вашого додатку
+        const result = 'AuthService created\nUserService created\nPaymentService created\nUser added: id{"id":"25","name":"Янош","idTour":"49"}\nUser added: id{"id":"4","name":"Рома","idTour":"200"}\nUser added: id{"id":"0","name":"Agent","idTour":"34"}\nTour ready: 34\nTour ready: 49\nTour ready: 200\n';
 
-    for (const tour of tours) {
-        ch.sendToQueue('tour_queue', Buffer.from(tour.toString()));
+        // Надсилання результату до RabbitMQ
+        await ch.assertQueue('results_queue', { durable: true });
+        await ch.sendToQueue('results_queue', Buffer.from(result));
+
+        console.log('Result sent to RabbitMQ');
+
+        // Створення споживача для отримання повідомлень з RabbitMQ
+        await ch.assertQueue('results_queue', { durable: true });
+        ch.consume('results_queue', (msg) => {
+            const message = msg.content.toString();
+            console.log('Message received from RabbitMQ:', message);
+            // Тут ви можете обробити отримане повідомлення з RabbitMQ
+        }, { noAck: true });
+
+        // Закриваємо з'єднання
+        // await ch.close();
+        // await conn.close();
+    } catch (error) {
+        console.error('Error in main:', error);
     }
 }
 
